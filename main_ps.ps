@@ -1,0 +1,19 @@
+varying vec3 N;
+varying vec3 v;
+uniform vec4 phColor;
+
+void main(void)
+{
+	vec3 L = gl_LightSource[0].position.xyz - v;
+	vec3 L2 = gl_LightSource[1].position.xyz - v;
+
+	float factor = 5;
+	float factor2= 50;
+	float Idiff = max(dot(normalize(L) * factor, N), 0.0) * pow(length(L), -2.0);
+	float Idiff2= max(dot(normalize(L2) * factor2, N), 0.0) * pow(length(L2), -2.0);
+
+	gl_FragColor = 
+		//vec4(0, 0, 0.05, 1.0) +
+		vec4(1.0, 1.0, 1.0, 1.0) * Idiff +
+		phColor * Idiff2; // diffuse reflection
+}
