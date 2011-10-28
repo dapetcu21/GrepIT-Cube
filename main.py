@@ -10,7 +10,7 @@ import time
 from core import *
 
 class Cube:
-    def __init__(self,x,y,z,texid):
+    def __init__(self,x,y,z):
         self.rx = 0
         self.ry = 0
         self.rz = 0
@@ -19,66 +19,45 @@ class Cube:
         self.py = y
         self.pz = z
 
-        self.tex = texid
     def render(self):
         glPushMatrix()
         glTranslate(self.px,self.py,self.pz)
         glRotate(self.rx,1,0,0)
         glRotate(self.ry,0,1,0)
         glRotate(self.rz,0,0,1)
-
-        glBindTexture(GL_TEXTURE_2D, self.tex)
                         
         glBegin(GL_QUADS)
 
-        #glColor3ub(213,17,27)
-        #glColor3f(0.83,0.06,0.10)
-        #glTexCoord2f(0,0)
         glNormal3f(0, 0, -1)
         glVertex3f( -1, -1, -1)
         glVertex3f( 1, -1, -1)
         glVertex3f( 1, 1, -1)
         glVertex3f( -1, 1, -1)
 
-        #glColor3ub(255,128,0)
-        #glColor3f(1,0.50,0)           
-        #glTexCoord2f(1,0)
         glNormal3f(0, 0, 1)
         glVertex3f( -1, -1, 1)
         glVertex3f( 1, -1, 1)
         glVertex3f( 1, 1, 1)
         glVertex3f( -1, 1, 1)
 
-        #glColor3ub(0,128,255)
-        #glColor3f(0,0.50,1)
-        #glTexCoord2f(0.5,0)
         glNormal3f(0, -1, 0)
         glVertex3f( -1, -1, -1)
         glVertex3f( 1, -1, -1)
         glVertex3f( 1, -1, 1)
         glVertex3f( -1, -1, 1)
 
-        #glColor3ub(70,225,4)
-        #glColor3f(0.27,1,0.01)
-        #glTexCoord2f(0,1)
         glNormal3f(0, 1, 0)
         glVertex3f( -1, 1, -1)
         glVertex3f( 1, 1, -1)
         glVertex3f( 1, 1, 1)
         glVertex3f( -1, 1, 1)
 
-        #glColor3ub(255,255,0)
-        #glColor3f(1,1,0)
-        #glTexCoord2f(0.5,1)
         glNormal3f(-1, 0, 0)
         glVertex3f( -1, -1, -1)
         glVertex3f( -1, 1, -1)
         glVertex3f( -1, 1, 1)
         glVertex3f( -1, -1, 1)
 
-        #glColor3ub(255,255,255)
-        #glColor3f(1,1,1)
-        #glTexCoord2f(1,1)
         glNormal3f(1, 0, 0)
         glVertex3f( 1, -1, -1)
         glVertex3f( 1, 1, -1)
@@ -162,35 +141,10 @@ class MyEngine(GREPEngine):
         self.lightColors = [[0,0,1],[0,1,0],[1,0,0]]
         self.lastT = 1
 
-    def loadImage( self, imageName = "tex.bmp" ):
-        im = Image.open(imageName)
-        try:
-            ix, iy, image = im.size[0], im.size[1], im.tostring("raw", "RGBA", 0, -1)
-        except SystemError:
-            ix, iy, image = im.size[0], im.size[1], im.tostring("raw", "RGBX", 0, -1)
-
-        ID = glGenTextures(1)
-
-        glActiveTexture(GL_TEXTURE0); # use first texturing unit
-        glBindTexture( GL_TEXTURE_2D, ID );
-
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameterf(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-        glTexImage2D(GL_TEXTURE_2D, 0, 3, ix, iy, 0, GL_RGBA, GL_UNSIGNED_BYTE, image)
-
-        return ID
-        
     def InitImpl(self):
         self.shaderColor = glGetUniformLocation(self.shaderProgram,"phColor")
         
         self.cubes={}
-        self.cubetex=self.loadImage("tex.bmp");
         self.peekXC = 0
         self.peekYC = 0
 
@@ -201,7 +155,7 @@ class MyEngine(GREPEngine):
             for y in range(-1,2):
                 self.cubes[x][y]={}
                 for z in range(-1,2):
-                    self.cubes[x][y][z] = Cube(x*2.5,y*2.5,z*2.5,self.cubetex)
+                    self.cubes[x][y][z] = Cube(x*2.5,y*2.5,z*2.5)
 
     def OnFrameBegin(self):
         tt = time.time()
@@ -321,5 +275,5 @@ def main():
 
     core.Shutdown()
 
-if __name__ == 'main':
+if __name__ == '__main__':
     main()

@@ -2,6 +2,10 @@ GrepIT Cube
 
 This is a rubik's cube written in Python for the GrepIT 6 OpenGL Workshop. I thought I'd share it
 
+Controls:
+Arrow keys - flip the cube
+ijkl - peak around
+
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
